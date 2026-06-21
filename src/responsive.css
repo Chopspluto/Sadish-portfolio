@@ -1,0 +1,31 @@
+/* /* ==========================================
+   MOBILE
+==========================================*/
+@media (max-width: 768px) {
+  .desc {
+    width: 100%;
+    text-align: justify;
+  }
+
+  .featured-projects hr {
+    width: 40%;
+  }
+  .nav-rail-left, .nav-rail-right{
+    display: none;
+  }
+  .about-content{
+    height: 85vh;
+    order: 1;
+  }
+  .about-center{
+    height: 50vh;
+    order: 3;
+  }
+  .contact-content{
+    height: 50vh;
+    order: 2;
+  }
+  .hud {
+    transform: scale(0.7);
+  }
+}
