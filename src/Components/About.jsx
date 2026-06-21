@@ -158,11 +158,9 @@ function About() {
       </div>
     </div>
   </div>
-  {/* <div className='vh-20'></div> */}
     <div className='about-footer'>
       Designed and Developed by @kanishkajayani
     </div>
-
     </>
   )
 }
