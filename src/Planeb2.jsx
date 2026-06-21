@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function Planeb2(props) {
 
-  const { nodes, materials } = useGLTF('/B-2.glb');
+  const { nodes, materials } = useGLTF('./B-2.glb');
   const planeRef = useRef();
 
   useGSAP(() => {
