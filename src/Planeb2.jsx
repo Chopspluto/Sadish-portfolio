@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function Planeb2(props) {
 
-  const { nodes, materials } = useGLTF('./B-2.glb');
+  const { nodes, materials } = useGLTF(`${import.meta.env.BASE_URL}B-2.glb`);
   const planeRef = useRef();
 
   useGSAP(() => {
@@ -50,8 +50,8 @@ export function Planeb2(props) {
             },
           });
           
-          tl.to(planeRef.current.position, {x: 2, y: 1.2});
-          tl.to(planeRef.current.scale, {x: 0.2, y: 0.2, z: 0.2}, 0);
+          tl.to(planeRef.current.position, {x: 1.5, y: 1});
+          tl.to(planeRef.current.scale, {x: 0.4, y: 0.4, z: 0.4}, 0);
           tl.to(planeRef.current.rotation, {y: Math.PI * 0.15}, 0);
 
           const tl2 = gsap.timeline({

@@ -76,8 +76,8 @@ function About() {
             <span className="dot"></span>
             <div>
               <h4>Emirates Aviation University</h4>
-              <p>BSc Aerospace Engineering</p>
-              <span>2021 - 2025</span>
+              <span>BSc Aerospace Engineering</span><br/>
+              <span>2023 - 2026</span>
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@ function About() {
         </div>
 
         <div className="skill">
-          <span>Programming</span>
+          <span>Mathematics</span>
           <div className="skill-bar">
-            <div className="skill-fill w75"></div>
+            <div className="skill-fill w90"></div>
           </div>
         </div>
       </div>
@@ -115,11 +115,11 @@ function About() {
       <div className="about-block">
         <h3>TOOLS</h3>
         <div className="tools-grid">
-          <span>CATIA</span>
+          <span>AutoCAD</span>
           <span>ANSYS</span>
           <span>MATLAB</span>
           <span>SolidWorks</span>
-          <span>Python</span>
+          <span>Boxford CADCAM</span>
         </div>
       </div>
 
