@@ -41,6 +41,21 @@
   .hud {
     transform: scale(0.7);
   }
+  .modal-container{
+    grid-template-columns: 1fr;
+  }
+  .modal-gallery-pane{
+    padding: 1rem;
+  }
+  .modal-details-pane{
+    padding: 1.5rem;
+  }
+  .modal-actions-container{
+    flex-direction: column;
+  }
+  .modal-close-btn{
+    display: none;
+  }
 }
 
 @media (max-width: 1200px) {
