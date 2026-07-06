@@ -51,7 +51,7 @@ export function Planeb2(props) {
           });
           
           tl.to(planeRef.current.position, {x: 1.5, y: 1});
-          tl.to(planeRef.current.scale, {x: 0.4, y: 0.4, z: 0.4}, 0);
+          tl.to(planeRef.current.scale, {x: 0.3, y: 0.3, z: 0.3}, 0);
           tl.to(planeRef.current.rotation, {y: Math.PI * 0.15}, 0);
 
           const tl2 = gsap.timeline({
@@ -64,7 +64,7 @@ export function Planeb2(props) {
             },
           });
           
-          tl2.to(planeRef.current.position, {x: 0, y: isMobile ? -0.53 : 0.25});
+          tl2.to(planeRef.current.position, {x: 0, y: isMobile ? 0 : 0.25});
           tl2.to(planeRef.current.scale,{x: 0.25, y: 0.25, z: 0.25}, 0);
           tl2.to(planeRef.current.rotation,{y: Math.PI * 0, x: Math.PI * 0.5}, 0);
 

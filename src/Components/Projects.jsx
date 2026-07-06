@@ -76,7 +76,7 @@ function Projects() {
     const projectTl = gsap.timeline({
       scrollTrigger: {
         trigger: "#projects",
-        start: "top bottom-=100px",
+        start: "top bottom",
         end: "bottom bottom",
         scrub: 1.5,
         invalidateOnRefresh: true,
@@ -88,7 +88,7 @@ function Projects() {
              .to(".desc", { y: 0, opacity: 1, ease: "none" }, "-=0.2")
              .to(h4Title, { y: 0, opacity: 1, ease: "none" })
              .to(hrLine, { x: 0, opacity: 1, ease: "none" }, "-=0.3")
-             .to(cards, { y: 0, opacity: 1, ease: "none", stagger: 0.3 });
+             .to(cards, { y: 0, opacity: 1, ease: "none", stagger: 0.5 });
 
     requestAnimationFrame(() => {
       ScrollTrigger.refresh();

@@ -1,7 +1,7 @@
 /* /* ==========================================
    MOBILE
 ==========================================*/
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .desc {
     width: 100%;
     text-align: justify;
@@ -13,19 +13,47 @@
   .nav-rail-left, .nav-rail-right{
     display: none;
   }
+  .projects-grid {
+    grid-template-columns: 1fr;
+    margin: 1rem 2rem;
+  }
+  .project-card {
+    height: 350px;
+  }
+  .about-section{
+    grid-template-columns: 1fr;
+  }
   .about-content{
-    height: 85vh;
+    margin-bottom: 4rem;
     order: 1;
   }
   .about-center{
-    height: 50vh;
     order: 3;
   }
   .contact-content{
-    height: 50vh;
+    /* margin-bottom: 1rem; */
+    height: 40vh;
     order: 2;
+  }
+  .contact-header .redline {
+    margin-left: 14rem;
   }
   .hud {
     transform: scale(0.7);
+  }
+}
+
+@media (max-width: 1200px) {
+  .hud{
+    transform: scale(0.7);
+  }
+  .featured-projects hr {
+    width: 40%;
+  }
+  .nav-rail-left, .nav-rail-right{
+    display: none;
+  }
+  .contact-header .redline {
+    margin-left: 14rem;
   }
 }
