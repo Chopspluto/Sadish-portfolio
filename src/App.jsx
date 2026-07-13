@@ -8,6 +8,7 @@ import Navigation from './Components/Navigation';
 import { lazy, Suspense } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SceneLoader from "./Components/SceneLoader";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,7 +46,7 @@ export default function App() {
     <>
       <Navigation activeSection={activeSection} />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SceneLoader/>}>
         <ThreeCanvas/>
       </Suspense>
     
