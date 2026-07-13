@@ -65,34 +65,31 @@ function Projects() {
     const h2Title = sectionRef.current.querySelector(".project-title");
     const h4Title = sectionRef.current.querySelector(".featured-title");
     const hrLine = sectionRef.current.querySelector(".featured-hr");
+    const redLines = gsap.utils.toArray(".redline", sectionRef.current);
+    const descriptions = gsap.utils.toArray(".desc", sectionRef.current);
 
-    gsap.set(h2Title, { y: 50, opacity: 0 });
-    gsap.set(h4Title, { y: 50, opacity: 0 });
-    gsap.set(hrLine, { x: 100, opacity: 0 });
-    gsap.set(gsap.utils.toArray(".redline", sectionRef.current), { x: -100, opacity: 0 });
-    gsap.set(gsap.utils.toArray(".desc", sectionRef.current), { y: 50, opacity: 0 });
-    gsap.set(cards, { y: 50, opacity: 0 });
+    gsap.set([h2Title, h4Title, cards, descriptions], { y: 30, opacity: 0, force3D: true });
+    gsap.set(hrLine, { x: 50, opacity: 0, force3D: true });
+    gsap.set(redLines, { x: -50, opacity: 0, force3D: true });
 
     const projectTl = gsap.timeline({
       scrollTrigger: {
         trigger: "#projects",
         start: "top bottom",
         end: "bottom bottom",
-        scrub: 1.5,
+        scrub: 0.5,
         invalidateOnRefresh: true,
       }
     });
 
     projectTl.to(h2Title, { y: 0, opacity: 1, ease: "none" })
-             .to(".redline", { x: 0, opacity: 1, ease: "none" }, "-=0.2")
-             .to(".desc", { y: 0, opacity: 1, ease: "none" }, "-=0.2")
+             .to(redLines, { x: 0, opacity: 1, ease: "none" }, "-=0.2")
+             .to(descriptions, { y: 0, opacity: 1, ease: "none" }, "-=0.2")
              .to(h4Title, { y: 0, opacity: 1, ease: "none" })
              .to(hrLine, { x: 0, opacity: 1, ease: "none" }, "-=0.3")
-             .to(cards, { y: 0, opacity: 1, ease: "none", stagger: 0.5 });
-
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
+             .to(cards, { y: 0, opacity: 1, ease: "none", stagger: 0.2 });
+    
+    // ScrollTrigger.refresh();
     
   }, []);
 

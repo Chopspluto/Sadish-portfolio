@@ -15,53 +15,60 @@ function Home() {
     useGSAP(() => {
       if (!ringRef.current) return;
 
-      gsap.set(ringRef.current, {opacity: 0, scale: 0.4, xPercent: -50, yPercent: -50});
+      gsap.set(ringRef.current, { opacity: 0, scale: 0.4, xPercent: -50, yPercent: -50, force3D: true });
+      gsap.set([heroTextRef.current, name.current, portfolio.current], { opacity: 0, y: 20, force3D: true });
 
-      gsap.to(ringRef.current, {
+      const entranceTl = gsap.timeline({
+        onComplete: () => {
+          createScrollAnimations();
+        }
+      });
+
+      entranceTl.to(ringRef.current, {
         opacity: 1,
         scale: 1,
         duration: 1.6,
-        ease: "power3.out"
-      });
+        ease: "power3.out",
+        force3D: true
+      })
+      .to([name.current, portfolio.current], { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: "power3.out" })
+      .to(heroTextRef.current, { opacity: 1, y: 0, duration: 1, delay: 0.4, ease: "power3.out" });
 
-      gsap.to(ringRef.current, {
-        scale: 0.1,
-        opacity: 0,
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: "#projects",
-          start: "top bottom",
-          end: "top top",
-          scrub: 1,
-        }
-      });
+      function createScrollAnimations() {
+        gsap.to(ringRef.current, {
+          scale: 0.1,
+          opacity: 0,
+          scrollTrigger: {
+            trigger: "#projects",
+            start: "top bottom",
+            end: "top top",
+            scrub: 1,
+          }
+        });
 
-      gsap.to(heroTextRef.current, {
-        yPercent: -200,
-        opacity: 0,
-        filter: "blur(10px)",
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: "#projects",
-          start: "top bottom",
-          end: "top top",
-          scrub: true,
-        }
-      });
+        gsap.to(heroTextRef.current, {
+          yPercent: -150,
+          opacity: 0,
+          scrollTrigger: {
+            trigger: "#projects",
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+          }
+        });
 
-      gsap.to(name.current, {
-        xPercent: 200,
-        opacity: 0,
-        immediateRender: false,
-        scrollTrigger: { trigger: "#projects", start: "top bottom", end: "top top", scrub: true }
-      });
+        gsap.to(name.current, {
+          xPercent: 150,
+          opacity: 0,
+          scrollTrigger: { trigger: "#projects", start: "top bottom", end: "top top", scrub: true }
+        });
 
-      gsap.to(portfolio.current, {
-        xPercent: -200,
-        opacity: 0,
-        immediateRender: false,
-        scrollTrigger: { trigger: "#projects", start: "top bottom", end: "top top", scrub: true }
-      });
+        gsap.to(portfolio.current, {
+          xPercent: -150,
+          opacity: 0,
+          scrollTrigger: { trigger: "#projects", start: "top bottom", end: "top top", scrub: true }
+        });
+      }
 
     }, []);
 

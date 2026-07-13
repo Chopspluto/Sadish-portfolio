@@ -1,14 +1,17 @@
 import { Canvas } from '@react-three/fiber';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Scenes  from './Scenes';
+import React, { useEffect, useState } from 'react';
+import Scenes  from './Components/Scenes';
 import Home from './Components/Home';
 import Projects from './Components/Projects';
 import About from './Components/About';
 import Navigation from './Components/Navigation';
+import { lazy, Suspense } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const ThreeCanvas = lazy(() => import("./ThreeCanvas"));
 
 export default function App() {
 
@@ -42,11 +45,10 @@ export default function App() {
     <>
       <Navigation activeSection={activeSection} />
 
-      <div className='canvas-container'>
-        <Canvas style={{ pointerEvents: "none" }}>
-          <Scenes/>
-        </Canvas>
-      </div>
+      <Suspense fallback={null}>
+        <ThreeCanvas/>
+      </Suspense>
+    
       <section className="section" id='home'>
         <Home/>
       </section>

@@ -17,9 +17,12 @@ function About() {
   const rightRef = useRef(null);
 
   useGSAP(() => {
+    if (!containerRef.current) return;
 
     const leftElements = leftRef.current.querySelectorAll('.about-header, .about-block');
     const rightElements = rightRef.current.querySelectorAll('.contact-header, .contact-item');
+
+    gsap.set([leftElements, rightElements, centerRef.current], { force3D: true });
 
     const isMobile = window.innerWidth < 768;
 
@@ -28,34 +31,26 @@ function About() {
         trigger: containerRef.current,
         start: 'top bottom',
         end: "bottom bottom-=100px",
-        scrub: 1,
-        toggleActions: 'play none none reverse',
+        scrub: 0.5,
+        invalidateOnRefresh: true,
       }
     });
 
-    tl.from(leftElements, {
-      x: -100,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power2.out',
-      immediateRender: false
-    }, 0)
-    .from(centerRef.current, {
-      scale: 0,
-      opacity: 0,
-      duration: 1,
-      ease: 'back.out(1.7)',
-      immediateRender: false
-    }, 0)
-    .from(rightElements, {
-      x: 100,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power2.out',
-      immediateRender: false,
-    }, 0);
+    tl.fromTo(leftElements, 
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'none' }, 
+      0
+    )
+    .fromTo(centerRef.current, 
+      { scale: 0.6, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1, ease: 'power1.out' }, // Replaced 'back.out' which lags on scrub
+      0
+    )
+    .fromTo(rightElements, 
+      { x: 50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'none' }, 
+      0
+    );
 
   }, { scope: containerRef });
 

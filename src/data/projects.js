@@ -5,9 +5,9 @@ import projectTwoarch from '../assets/project2-image2.webp';
 import projectThreemain from '../assets/project3-image1.webp';
 import projectThreearch from '../assets/project3-image2.webp';
 
-import projectOnePdf from './Dirvonx.pdf';
-import projectTwoPdf from './IFPP.pdf';
-import projectThreePdf from './AFSD.pdf';
+import projectOnePdf from '/projects/Dirvonx.pdf';
+import projectTwoPdf from '/projects/IFPP.pdf';
+import projectThreePdf from '/projects/AFSD.pdf';
 
 export const PROJECTS = [
   {
