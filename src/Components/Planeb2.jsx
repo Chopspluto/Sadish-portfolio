@@ -1,104 +1,86 @@
-import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import React, { useRef, useState, useEffect } from 'react';
+import { useGLTF, useProgress } from '@react-three/drei';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const MODEL = `${import.meta.env.BASE_URL}B-2.glb`;
+
 export function Planeb2(props) {
+  const { nodes, materials } = useGLTF(MODEL);
+  const introRef = useRef();
+  const scrollRef = useRef();
 
-  const { nodes, materials } = useGLTF(`${import.meta.env.BASE_URL}B-2.glb`);
-  const planeRef = useRef();
+  // wait until the loader overlay has finished
+  const { active, progress } = useProgress();
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!active && progress === 100) {
+      const t = setTimeout(() => setReady(true), 600);
+      return () => clearTimeout(t);
+    }
+  }, [active, progress]);
 
+  const mats = [materials.Material, materials['Material.001']].filter(Boolean);
+
+  // start invisible
+  useEffect(() => {
+    mats.forEach((m) => { m.transparent = true; m.opacity = 0; });
+  }, []);
+
+  // 1) INTRO – only after loading
   useGSAP(() => {
-    if (!planeRef.current) return;
+    if (!ready) return;
+    const tl = gsap.timeline();
+    tl.to(introRef.current.position, { x: 0, y: 0, z: 0, duration: 1.8, ease: 'power3.out' }, 0);
+    tl.to(introRef.current.scale, { x: 0.5, y: 0.5, z: 0.5, duration: 1.8, ease: 'power3.out' }, 0);
+    mats.forEach((m) =>
+      tl.to(m, {
+        opacity: 1, duration: 1.5, ease: 'power2.inOut',
+        onComplete: () => { m.transparent = false; }, // avoids sorting artifacts
+      }, 0.2)
+    );
+  }, { dependencies: [ready] });
 
-    const isMobile = window.innerWidth < 768;
-    const targetMaterials = [];
-    if(materials.Material) targetMaterials.push(materials.Material);
-    if(materials['Material.001']) targetMaterials.push(materials['Material.001']);
-
-    targetMaterials.forEach((material) => {
-      material.transparent = true;
-      material.opacity = 0;
-    });
-
-    gsap.set(planeRef.current.position, {x:0, y:-0.5, z:-1});
-    gsap.set(planeRef.current.scale, {x:0.3, y:0.3, z:0.3});
-
+  // 2) SCROLL – independent of the intro, explicit start values
+  useGSAP(() => {
     const mm = gsap.matchMedia();
+    mm.add({ isMobile: '(max-width: 767px)', isDesktop: '(min-width: 768px)' }, (ctx) => {
+      const { isMobile } = ctx.conditions;
+      const obj = scrollRef.current;
 
-    // Let MatchMedia handle mobile vs desktop natively
-    mm.add({
-      isMobile: "(max-width: 768px)",
-      isDesktop: "(min-width: 768px)"
-    }, (context) => {
-      let { isMobile } = context.conditions;
+      gsap.timeline({
+        scrollTrigger: { trigger: '#projects', start: 'top bottom', end: 'top top', scrub: 1, invalidateOnRefresh: true },
+      })
+        .fromTo(obj.position, { x: 0, y: 0 }, { x: 3, y: 2 }, 0)
+        .fromTo(obj.scale, { x: 1, y: 1, z: 1 }, { x: 0.6, y: 0.6, z: 0.6 }, 0)
+        .fromTo(obj.rotation, { y: 0 }, { y: Math.PI * 0.15 }, 0);
 
-      const entryTl = gsap.timeline();
-      
-      entryTl.to(planeRef.current.position, {x: 0, y: 0, z: 0, duration: 1.8, ease: "power3.out"}, 0);
-      entryTl.to(planeRef.current.scale, { x: 0.5, y: 0.5, z: 0.5, duration: 1.8, ease: "power3.out" }, 0);
-
-      targetMaterials.forEach((material) => {
-        entryTl.to(material, {opacity: 1, duration: 1.5, ease: "power2.inOut"}, 0.2);
-      });
-
-      // Scroll Triggers kick off cleanly
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#projects",
-          start: "top bottom",
-          end: "top top",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-      
-      tl.to(planeRef.current.position, {x: 1.5, y: 1});
-      tl.to(planeRef.current.scale, {x: 0.3, y: 0.3, z: 0.3}, 0);
-      tl.to(planeRef.current.rotation, {y: Math.PI * 0.15}, 0);
-
-      const tl2 = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#about",
-          start: "top bottom",
-          end: "top top",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-      
-      tl2.to(planeRef.current.position, {x: 0, y: isMobile ? 0 : 0.25});
-      tl2.to(planeRef.current.scale,{x: 0.25, y: 0.25, z: 0.25}, 0);
-      tl2.to(planeRef.current.rotation,{y: Math.PI * 0, x: Math.PI * 0.5}, 0);
+      gsap.timeline({
+        immediateRender: false,
+        scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'top top', scrub: 1, invalidateOnRefresh: true },
+      })
+        .fromTo(obj.position, { x: 3, y: 2 }, { x: 0, y: isMobile ? 0 : 0.5, immediateRender: false }, 0)
+        .fromTo(obj.scale, { x: 0.6, y: 0.6, z: 0.6 }, { x: 0.5, y: 0.5, z: 0.5, immediateRender: false }, 0)
+        .fromTo(obj.rotation, { x: 0, y: Math.PI * 0.15 }, { x: Math.PI * 0.5, y: 0, immediateRender: false }, 0);
     });
-
-    ScrollTrigger.refresh();
-
   }, []);
 
   return (
-    <group ref={planeRef} scale={[0.5,0.5,0.5]} rotation={[0, 0, 0]} {...props} dispose={null}>
-      <mesh castShadow receiveShadow geometry={nodes.Plano.geometry} material={materials.Material}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Plano001.geometry}
-          material={materials['Material.001']}
-          scale={0.508}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Plano003.geometry}
-          material={materials['Material.001']}
-          position={[0.758, -0.012, -0.156]}
-          scale={0.508}
-        />
-      </mesh>
+    // intro group starts small, low and behind; the final intro scale is 1 and the 0.5 below is the base size
+    <group ref={introRef} position={[0, -0.5, -1]} scale={0.3} {...props}>
+      <group ref={scrollRef}>
+        <group dispose={null}>
+          <mesh castShadow receiveShadow geometry={nodes.Plano.geometry} material={materials.Material}>
+            <mesh castShadow receiveShadow geometry={nodes.Plano001.geometry} material={materials['Material.001']} scale={0.508} />
+            <mesh castShadow receiveShadow geometry={nodes.Plano003.geometry} material={materials['Material.001']} position={[0.758, -0.012, -0.156]} scale={0.508} />
+          </mesh>
+        </group>
+      </group>
     </group>
-  )
+  );
 }
+// useGLTF.preload(MODEL);
 useGLTF.preload(`${import.meta.env.BASE_URL}B-2.glb`);

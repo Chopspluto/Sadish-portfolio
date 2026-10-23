@@ -1,67 +1,63 @@
-import { Canvas } from '@react-three/fiber';
-import React, { useEffect, useState } from 'react';
-import Scenes  from './Components/Scenes';
+import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 import Home from './Components/Home';
 import Projects from './Components/Projects';
 import About from './Components/About';
 import Navigation from './Components/Navigation';
-import { lazy, Suspense } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SceneLoader from "./Components/SceneLoader";
+import SceneLoader from './Components/SceneLoader';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ThreeCanvas = lazy(() => import("./ThreeCanvas"));
+const ThreeCanvas = lazy(() => import('./ThreeCanvas'));
 
 export default function App() {
+  const [activeSection, setActiveSection] = useState('home');
+  const [loaded, setLoaded] = useState(false);
 
-  const [activeSection, setActiveSection] = useState("home");
+  const handleLoaded = useCallback(() => setLoaded(true), []);
 
+  // KEPT: section tracking for the nav
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if(entry.isIntersecting){
-            setActiveSection(entry.target.id);
-          }
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
-      }, {
-        threshold: 0.5,
-      }
+      },
+      { threshold: 0.5 }
     );
 
-    console.log(activeSection); 
-
-    const sections = document.querySelectorAll("section");
-
-    sections.forEach((section) => {
-      observer.observe(section);
-    });
-
+    document.querySelectorAll('section').forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, []);
 
+  // NEW: recalculate all ScrollTrigger positions once loading is done
+  useEffect(() => {
+    if (!loaded) return;
+    const refresh = () => ScrollTrigger.refresh();
+    refresh();
+    document.fonts?.ready.then(refresh);
+    window.addEventListener('load', refresh);
+    return () => window.removeEventListener('load', refresh);
+  }, [loaded]);
+
   return (
     <>
-      <Navigation activeSection={activeSection} />
+      <SceneLoader onDone={handleLoaded} />
 
-      <Suspense fallback={<SceneLoader/>}>
-        <ThreeCanvas/>
+      <Suspense fallback={null}>
+        <ThreeCanvas />
       </Suspense>
-    
-      <section className="section" id='home'>
-        <Home/>
-      </section>
 
-      <section className="section" id='projects'>
-        <Projects/>
-      </section>
+      <main style={{ visibility: loaded ? 'visible' : 'hidden' }}>
+        <Navigation activeSection={activeSection} />
 
-      <section className="section" id='about'>
-        <About/>
-      </section>
-
+        <section className="section" id="home"><Home /></section>
+        <section className="section" id="projects"><Projects /></section>
+        <section className="section" id="about"><About /></section>
+      </main>
     </>
-  )
+  );
 }
